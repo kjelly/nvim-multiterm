@@ -2,6 +2,10 @@ import re
 import neovim
 
 
+def isNumber(x):
+    return x in '1234567890'
+
+
 @neovim.plugin
 class MultiTerm(object):
 
@@ -56,21 +60,22 @@ class MultiTerm(object):
             # C a ls : Run ls in all terminal
             cmd = ' '.join(args[1:]) + '\n'
             self.run_in_all_terminal(cmd)
-        elif len(arg0) == 2 and arg0[0] == 's':
+        elif len(arg0) == 2 and arg0[0] == 's' and isNumber(arg0[1]):
             # C s1 ls : store command `ls` in command map 1.
             cmd = ' '.join(args[1:]) + '\n'
             self.command_map[arg0[1]] = cmd
-        elif len(arg0) <= 2 and len(arg0) > 0 and arg0[0] == 'g':
-            if len(arg0) == 1:
-                # C g : show all commmand stored in command map.
-                text = ''
-                for i in self.command_map:
-                    text += '%s => %s' % (i, self.command_map[i])
-                self.echo(text)
-            elif len(arg0) == 2:
-                # C g1 : run command 1 stored in command map.
-                cmd = self.command_map.get(arg0[1], '')
-                self.run(self.last_term_job_id, cmd)
+        elif arg0[0] == 'g' and len(arg0) == 1:
+            # C g : show all commmand stored in command map.
+            text = ''
+            for i in self.command_map:
+                text += '%s => %s' % (i, self.command_map[i])
+            self.echo(text)
+        elif arg0[0] == 'g' and len(arg0) == 2 and isNumber(arg0[1]):
+            # C g1 : run command 1 stored in command map.
+            self.echo(arg0)
+            cmd = self.command_map.get(arg0[1], '')
+            self.run(self.last_term_job_id, cmd)
+
         elif arg0 in ['l', 'L']:
             # C l : list all terminal.
             text = ''
