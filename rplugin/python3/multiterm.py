@@ -107,6 +107,20 @@ class MultiTerm(object):
             cmd = ' '.join(args[1:]) + '\n'
             for i in arg0.split(','):
                 self.run(i, cmd)
+        elif re.match(r'(\w+,)+', arg0):
+            cmd = ' '.join(args[1:]) + '\n'
+            name_list = arg0.split(',')
+            inv_name_map = {v: k for k, v in self.name_map.items()}
+            ever_run = False
+            for name in name_list:
+                job_id = inv_name_map.get(name, None)
+                if job_id is None:
+                    continue
+                self.run(job_id, cmd)
+                ever_run = True
+            if ever_run is False:
+                self.run(self.last_term_job_id, cmd)
+
         else:
             cmd = ' '.join(args[:]) + '\n'
             self.run(self.last_term_job_id, cmd)
