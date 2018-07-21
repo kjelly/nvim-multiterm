@@ -83,6 +83,18 @@ class MultiTerm(object):
             elif len(args) > 2:
                 self.name_map[args[2]] = args[1]
 
+        elif arg0 in ['c', 'C'] and len(args) > 1:
+            name_or_id = args[1]
+            inv_name_map = {v: k for k, v in self.name_map.items()}
+            inv_data_map = {v: k for k, v in self.data.items()}
+            r = inv_name_map.get(name_or_id, None)
+            if r is None:
+                r = name_or_id
+            r = inv_data_map.get(r, None)
+            if r is None:
+                return
+            self.nvim.command("buffer %s" % r)
+
         elif arg0 in ['l', 'L']:
             # C l : list all terminal.
             text = ''
