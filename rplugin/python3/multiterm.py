@@ -13,6 +13,7 @@ class MultiTerm(object):
         self.nvim = nvim
         self.data = {}
         self.command_map = {}
+        self.name_map = {}
         self.last_term_job_id = None
         self.last_command = ''
 
@@ -76,11 +77,18 @@ class MultiTerm(object):
             cmd = self.command_map.get(arg0[1], '')
             self.run(self.last_term_job_id, cmd)
 
+        elif arg0 in ['n', 'N'] and len(args) > 1:
+            if len(args) == 2:
+                self.name_map[self.last_term_job_id] = args[1]
+            elif len(args) > 2:
+                self.name_map[args[2]] = args[1]
+
         elif arg0 in ['l', 'L']:
             # C l : list all terminal.
             text = ''
             for i in self.data:
-                text += '%s => %s\n' % (self.data[i], i)
+                job_id = self.data[i]
+                text += '%s => %s, %s\n' % (job_id, i, self.name_map.get(job_id, ''))
             self.echo(text)
         elif re.match(r'(\d+,)*\d+', arg0):
             # C 1, 3 ls : run ls in terminal 1, terminal 3.
