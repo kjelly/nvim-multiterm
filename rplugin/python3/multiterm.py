@@ -16,6 +16,9 @@ class MultiTerm(object):
         self.name_map = {}
         self.last_term_job_id = None
         self.last_command = ''
+        self.name_list = ['one', 'two', 'three', 'four', 'five', 'six',
+                          'seven', 'eight', 'nine', 'ten']
+        self.name_index = 0
 
     def write_text(self, job_id, data):
         self.nvim.call('jobsend', int(job_id), data)
@@ -101,6 +104,11 @@ class MultiTerm(object):
             for i in self.data:
                 job_id = self.data[i]
                 text += '%s => %s, %s\n' % (job_id, i, self.name_map.get(job_id, ''))
+            try:
+                job_id = self.nvim.eval('expand(b:terminal_job_id)')
+            except:
+                pass
+            text += 'current job_id=%s, name=%s' % (job_id, self.name_map[job_id])
             self.echo(text)
         elif re.match(r'(\d+,)*\d+', arg0):
             # C 1, 3 ls : run ls in terminal 1, terminal 3.
@@ -131,6 +139,9 @@ class MultiTerm(object):
         job_id = self.nvim.eval('expand(b:terminal_job_id)')
         self.data[filename] = job_id
         self.last_term_job_id = job_id
+        if self.name_index < 10:
+            self.name_map[job_id] = self.name_list[self.name_index]
+            self.name_index += 1
 
     @neovim.autocmd('BufWinEnter', eval='expand("%:p")', sync=True)
     def on_buffer_win_enter(self, filename):
