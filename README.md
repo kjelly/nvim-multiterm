@@ -43,16 +43,33 @@ Store command `ls` in command map 1:
 
 Run command which is stored in command map 1:
 
-`C s1 ls`
+`C r1`
 
 Run the last command:
+
 `C !`
 
 Run the command with current line:
+
 `C !l`
 
 Run the command with current word:
+
 `C !w`
 
 Run the command stored in vim register:
+
 `C @a @b`
+
+Name the current terminal to w3m:
+
+`C n w3m`
+
+Name the terminal with job id 5 to w3m:
+
+`C n w3m 5`
+
+Run the command, 'ls', in the terminal with the name w3m:
+
+`C w3m, ls`
+
