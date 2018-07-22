@@ -68,13 +68,13 @@ class MultiTerm(object):
             # C s1 ls : store command `ls` in command map 1.
             cmd = ' '.join(args[1:]) + '\n'
             self.command_map[arg0[1]] = cmd
-        elif arg0[0] == 'g' and len(arg0) == 1:
+        elif arg0[0] == 'r' and len(arg0) == 1:
             # C g : show all commmand stored in command map.
             text = ''
             for i in self.command_map:
                 text += '%s => %s' % (i, self.command_map[i])
             self.echo(text)
-        elif arg0[0] == 'g' and len(arg0) == 2 and isNumber(arg0[1]):
+        elif arg0[0] == 'r' and len(arg0) == 2 and isNumber(arg0[1]):
             # C g1 : run command 1 stored in command map.
             self.echo(arg0)
             cmd = self.command_map.get(arg0[1], '')
@@ -86,7 +86,7 @@ class MultiTerm(object):
             elif len(args) > 2:
                 self.name_map[args[2]] = args[1]
 
-        elif arg0 in ['c', 'C'] and len(args) > 1:
+        elif arg0 in ['g', 'G'] and len(args) > 1:
             name_or_id = args[1]
             inv_name_map = {v: k for k, v in self.name_map.items()}
             inv_data_map = {v: k for k, v in self.data.items()}
