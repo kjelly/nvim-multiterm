@@ -73,3 +73,8 @@ Run the command, 'ls', in the terminal with the name w3m:
 
 `C w3m, ls`
 
+Use w3m to open google in the terminal whose name is w3m:
+
+Note: The feature require w3m program and psutil python package
+
+`C w google.com`
