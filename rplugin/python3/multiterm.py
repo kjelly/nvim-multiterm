@@ -1,5 +1,9 @@
 import re
 import neovim
+try:
+    import psutil
+except ImportError:
+    psutil = None
 
 
 def isNumber(x):
@@ -19,6 +23,9 @@ class MultiTerm(object):
         self.name_list = ['one', 'two', 'three', 'four', 'five', 'six',
                           'seven', 'eight', 'nine', 'ten']
         self.name_index = 0
+        self.browser = self.nvim.eval("expand('$BROWSER')")
+        if self.browser == '$BROWSER':
+            self.browser = 'w3m'
 
     def write_text(self, job_id, data):
         self.nvim.call('jobsend', int(job_id), data)
@@ -97,6 +104,27 @@ class MultiTerm(object):
             if r is None:
                 return
             self.nvim.command("buffer %s" % r)
+        elif arg0 in ['w', 'W']:
+            if psutil is None:
+                return
+            inv_name_map = {v: k for k, v in self.name_map.items()}
+            inv_data_map = {v: k for k, v in self.data.items()}
+            if inv_name_map.get('w3m', None) is None:
+                self.nvim.command("terminal")
+                self.nvim.command("C n w3m")
+            inv_name_map = {v: k for k, v in self.name_map.items()}
+            inv_data_map = {v: k for k, v in self.data.items()}
+            job_id = inv_name_map['w3m']
+            file_name = inv_data_map[job_id]
+            self.nvim.command("buffer %s" % file_name)
+            url = ' '.join(args[1:]) + '\n'
+            pid = file_name.split('/')[-1].split(':')[0]
+            p = psutil.Process(pid=int(pid, 10))
+            childrens = p.children()
+            if len(childrens) > 0 and childrens[0].name() == 'w3m':
+                childrens[0].kill()
+            self.run(job_id, '%s %s' % (self.browser, url))
+            self.nvim.command("normal! i")
 
         elif arg0 in ['l', 'L']:
             # C l : list all terminal.
