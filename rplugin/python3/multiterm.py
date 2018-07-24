@@ -171,10 +171,27 @@ class MultiTerm(object):
             self.name_map[job_id] = self.name_list[self.name_index]
             self.name_index += 1
 
-    @neovim.autocmd('BufWinEnter', eval='expand("%:p")', sync=True)
+    @neovim.autocmd('BufWinEnter', eval='expand("%:p")', sync=True,
+                    pattern='*fish*')
     def on_buffer_win_enter(self, filename):
         try:
             job_id = self.nvim.eval('expand(b:terminal_job_id)')
             self.last_term_job_id = job_id
         except:
             pass
+
+    @neovim.autocmd('BufEnter', eval='expand("%:p")', sync=True,
+                    pattern='*fish*')
+    def on_buffer_enter(self, filename):
+        if psutil is None:
+            return
+        try:
+            pid = filename.split('/')[-1].split(':')[0]
+            p = psutil.Process(pid=int(pid, 10))
+            childrens = p.children()
+            if len(childrens) > 0 and childrens[0].name() == 'w3m':
+                self.nvim.command("normal! g")
+                self.nvim.command("normal! i")
+        except:
+            pass
+
