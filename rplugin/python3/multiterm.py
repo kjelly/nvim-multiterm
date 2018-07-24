@@ -54,7 +54,7 @@ class MultiTerm(object):
             elif len(val) == 2 and val[0] == '@':
                 args[i] = self.nvim.eval('@' + val[1])
 
-    @neovim.command("C", range='', nargs='*')
+    @neovim.command("C", range='', nargs='*', sync=True)
     def command(self, args, range):
         if len(args) < 1:
             return
@@ -89,6 +89,11 @@ class MultiTerm(object):
 
         elif arg0 in ['n', 'N'] and len(args) > 1:
             if len(args) == 2:
+                try:
+                    filename = self.nvim.eval("expand('%:p')").split(',')[0]
+                    self.nvim.command("file %s,%s" % (filename, args[1]))
+                except:
+                    pass
                 self.name_map[self.last_term_job_id] = args[1]
             elif len(args) > 2:
                 self.name_map[args[2]] = args[1]
@@ -168,7 +173,9 @@ class MultiTerm(object):
         self.data[filename] = job_id
         self.last_term_job_id = job_id
         if self.name_index < 10:
-            self.name_map[job_id] = self.name_list[self.name_index]
+            name = self.name_list[self.name_index]
+            self.name_map[job_id] = name
+            self.nvim.command("file %s,%s" % (filename, name))
             self.name_index += 1
 
     @neovim.autocmd('BufWinEnter', eval='expand("%:p")', sync=True,
