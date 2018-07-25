@@ -219,7 +219,6 @@ class MultiTerm(object):
         if self.name_index < 10:
             name = self.name_list[self.name_index]
             self.name_map[job_id] = name
-            self.nvim.command("file %s,%s" % (filename, name))
             self.name_index += 1
 
     @neovim.autocmd('BufWinEnter', eval='expand("%:p")', sync=True,
