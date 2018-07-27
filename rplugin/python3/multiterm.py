@@ -139,6 +139,7 @@ class MultiTerm(object):
             if i == '':
                 continue
             self.kill_and_run(i, cmd)
+            self.nvim.command("normal! G")
         return Result.HANDLED
 
     def kill_and_run(self, name, command):
