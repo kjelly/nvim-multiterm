@@ -226,7 +226,8 @@ class MultiTerm(object):
     def on_buffer_win_enter(self, filename):
         try:
             job_id = self.nvim.eval('expand(b:terminal_job_id)')
-            self.last_term_job_id = job_id
+            if self.name_map.get(job_id, '') != 'w3m':
+                self.last_term_job_id = job_id
         except:
             pass
 
