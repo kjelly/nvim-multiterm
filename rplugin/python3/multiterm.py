@@ -119,23 +119,42 @@ class MultiTerm(object):
         if psutil is None:
             return Result.BY_PASS
         inv_name_map = {v: k for k, v in self.name_map.items()}
-        inv_data_map = {v: k for k, v in self.data.items()}
         if inv_name_map.get('w3m', None) is None:
             self.nvim.command("terminal")
             self.nvim.command("C n w3m")
+
+        url = ' '.join(args[1:]) + '\n'
+        self.kill_and_run('w3m', '%s %s' % (self.browser, url))
+        self.nvim.command("normal! i")
+        return Result.HANDLED
+
+    def subcommand_k(self, arg0, args, range):
+        if psutil is None:
+            return Result.BY_PASS
+        name_list = args[1].split(',')
+        if len(name_list) < 2:
+            return
+        cmd = ' '.join(args[2:]) + '\n'
+        for i in name_list:
+            if i == '':
+                continue
+            self.kill_and_run(i, cmd)
+        return Result.HANDLED
+
+    def kill_and_run(self, name, command):
         inv_name_map = {v: k for k, v in self.name_map.items()}
         inv_data_map = {v: k for k, v in self.data.items()}
-        job_id = inv_name_map['w3m']
+        job_id = inv_name_map.get(name, None)
+        if job_id is None:
+            return
         file_name = inv_data_map[job_id]
         self.nvim.command("buffer %s" % file_name)
-        url = ' '.join(args[1:]) + '\n'
         pid = file_name.split('/')[-1].split(':')[0]
         p = psutil.Process(pid=int(pid, 10))
         childrens = p.children()
-        if len(childrens) > 0 and childrens[0].name() == 'w3m':
-            childrens[0].kill()
-        self.run(job_id, '%s %s' % (self.browser, url))
-        self.nvim.command("normal! i")
+        for i in childrens:
+            i.kill()
+        self.run(job_id, command)
         return Result.HANDLED
 
     def subcommand_l(self, arg0, args, range):
@@ -178,6 +197,7 @@ class MultiTerm(object):
             'r': self.subcommand_r,
             's': self.subcommand_s,
             'w': self.subcommand_w,
+            'k': self.subcommand_k,
         }
 
         arg0 = args[0]
