@@ -92,10 +92,11 @@ class MultiTerm(object):
             if len(args) == 2:
                 try:
                     filename = self.nvim.eval("expand('%:p')").split(',')[0]
+                    job_id = self.nvim.eval('expand(b:terminal_job_id)')
+                    self.name_map[job_id] = args[1]
                     self.nvim.command("keepalt file %s,%s" % (filename, args[1]))
                 except:
-                    pass
-                self.name_map[self.last_term_job_id] = args[1]
+                    self.name_map[self.last_term_job_id] = args[1]
                 return Result.HANDLED
             elif len(args) > 2:
                 self.name_map[args[2]] = args[1]
