@@ -112,6 +112,7 @@ class MultiTerm(object):
             r = name_or_id
         r = inv_data_map.get(r, None)
         if r is None:
+            self.echo("Terminal not found")
             return Result.BY_PASS
         self.nvim.command("buffer %s" % r)
         return Result.HANDLED
@@ -148,6 +149,7 @@ class MultiTerm(object):
         inv_data_map = {v: k for k, v in self.data.items()}
         job_id = inv_name_map.get(name, None)
         if job_id is None:
+            self.echo("Terminal, %s, not found" % name)
             return
         file_name = inv_data_map[job_id]
         self.nvim.command("buffer %s" % file_name)
