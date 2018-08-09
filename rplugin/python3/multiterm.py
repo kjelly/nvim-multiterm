@@ -235,7 +235,7 @@ class MultiTerm(object):
             self.run(self.last_term_job_id, cmd)
 
     @neovim.autocmd('TermOpen', eval='expand("<afile>")', sync=True,
-                    pattern='*fish*')
+                    pattern='*sh*')
     def on_termopen(self, filename):
         job_id = self.nvim.eval('expand(b:terminal_job_id)')
         self.data[filename] = job_id
@@ -247,7 +247,7 @@ class MultiTerm(object):
             self.name_index += 1
 
     @neovim.autocmd('BufWinEnter', eval='expand("%:p")', sync=True,
-                    pattern='*fish*')
+                    pattern='*sh*')
     def on_buffer_win_enter(self, filename):
         try:
             job_id = self.nvim.eval('expand(b:terminal_job_id)')
@@ -257,7 +257,7 @@ class MultiTerm(object):
             pass
 
     @neovim.autocmd('BufEnter', eval='expand("%:p")', sync=True,
-                    pattern='*fish*')
+                    pattern='*sh*')
     def on_buffer_enter(self, filename):
         if psutil is None:
             return
