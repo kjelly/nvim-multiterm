@@ -17,6 +17,13 @@ class Result(enum.Enum):
     UNHANDLED = 3
 
 
+def is_shell(name):
+    for i in ['fish', 'bash', 'csh', 'zsh', 'sh']:
+        if ':' + i in name:
+            return True
+    return False
+
+
 @neovim.plugin
 class MultiTerm(object):
 
@@ -237,6 +244,8 @@ class MultiTerm(object):
     @neovim.autocmd('TermOpen', eval='expand("<afile>")', sync=True,
                     pattern='*sh*')
     def on_termopen(self, filename):
+        if not is_shell(filename):
+            return
         job_id = self.nvim.eval('expand(b:terminal_job_id)')
         self.data[filename] = job_id
         self.last_term_job_id = job_id
