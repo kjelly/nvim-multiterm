@@ -62,11 +62,17 @@ class MultiTerm(object):
                 args[i] = self.nvim.eval('@' + val[1])
 
     def subcommand_a(self, arg0, args, range):
+        '''
+        Run the command in all terminal.
+        '''
         cmd = ' '.join(args[1:]) + '\n'
         self.run_in_all_terminal(cmd)
         return Result.HANDLED
 
     def subcommand_s(self, arg0, args, range):
+        '''
+        Store the command in the command_map.
+        '''
         if len(arg0) == 2 and arg0[0] == 's' and isNumber(arg0[1]):
             cmd = ' '.join(args[1:]) + '\n'
             self.command_map[arg0[1]] = cmd
@@ -74,6 +80,9 @@ class MultiTerm(object):
         return Result.UNHANDLED
 
     def subcommand_r(self, arg0, args, range):
+        '''
+        Run the command stored in command_map.
+        '''
         if arg0[0] == 'r' and len(arg0) == 1:
             self.echo(arg0)
             cmd = self.command_map.get(arg0[1], '')
@@ -88,6 +97,9 @@ class MultiTerm(object):
         return Result.UNHANDLED
 
     def subcommand_n(self, arg0, args, range):
+        '''
+        Name the terminal.
+        '''
         if arg0 in ['n', 'N'] and len(args) > 1:
             if len(args) == 2:
                 try:
@@ -104,6 +116,9 @@ class MultiTerm(object):
         return Result.UNHANDLED
 
     def subcommand_g(self, arg0, args, range):
+        '''
+        Go to the terminal.
+        '''
         name_or_id = args[1]
         inv_name_map = {v: k for k, v in self.name_map.items()}
         inv_data_map = {v: k for k, v in self.data.items()}
@@ -118,6 +133,9 @@ class MultiTerm(object):
         return Result.HANDLED
 
     def subcommand_w(self, arg0, args, range):
+        '''
+        Run w3m browser in the w3m terminal buffer.
+        '''
         if psutil is None:
             return Result.BY_PASS
         inv_name_map = {v: k for k, v in self.name_map.items()}
@@ -131,6 +149,9 @@ class MultiTerm(object):
         return Result.HANDLED
 
     def subcommand_k(self, arg0, args, range):
+        '''
+        Kill and run command in terminal.
+        '''
         if psutil is None:
             return Result.BY_PASS
         name_list = args[1].split(',')
@@ -162,7 +183,9 @@ class MultiTerm(object):
         return Result.HANDLED
 
     def subcommand_l(self, arg0, args, range):
-        # C l : list all terminal.
+        '''
+        List all terminal.
+        '''
         if len(arg0) > 1:
             return Result.UNHANDLED
         text = ''
