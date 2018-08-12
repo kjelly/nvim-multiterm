@@ -22,10 +22,11 @@ It's needed that run `UpdateRemotePlugins` again.
 ## Use Case
 
 Search in the google in the vim terminal.
-[w3m](https://raw.githubusercontent.com/kjelly/nvim-multiterm/master/docs/w3m.gif)
+![w3m](https://raw.githubusercontent.com/kjelly/nvim-multiterm/master/docs/w3m.gif)
+
 
 Search in the stackoverflow in the vim terminal.
-[how2](https://raw.githubusercontent.com/kjelly/nvim-multiterm/master/docs/how2.gif)
+![how2](https://raw.githubusercontent.com/kjelly/nvim-multiterm/master/docs/how2.gif)
 
 ##Usage
 
