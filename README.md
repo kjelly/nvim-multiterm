@@ -5,7 +5,7 @@ multiterm let you send your command to multi terminal.
 The plugin only support neovim.
 
 
-##Installation
+## Installation
 
 For Plug
 
@@ -26,9 +26,9 @@ Search in the google in the vim terminal.
 
 
 Search in the stackoverflow in the vim terminal.
-![how2](https://raw.githubusercontent.com/kjelly/nvim-multiterm/master/docs/how2.gif)
+![how-2](https://raw.githubusercontent.com/kjelly/nvim-multiterm/master/docs/how-2.gif)
 
-##Usage
+## Usage
 
 Run `ls -al` in the last terminal:
 
