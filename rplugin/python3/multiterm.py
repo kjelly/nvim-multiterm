@@ -17,6 +17,13 @@ class Result(enum.Enum):
     UNHANDLED = 3
 
 
+def is_shell(name):
+    for i in ['fish', 'bash', 'csh', 'zsh', 'sh']:
+        if ':' + i in name:
+            return True
+    return False
+
+
 @neovim.plugin
 class MultiTerm(object):
 
@@ -258,8 +265,10 @@ class MultiTerm(object):
             self.run(self.last_term_job_id, cmd)
 
     @neovim.autocmd('TermOpen', eval='expand("<afile>")', sync=True,
-                    pattern='*fish*')
+                    pattern='*sh*')
     def on_termopen(self, filename):
+        if not is_shell(filename):
+            return
         job_id = self.nvim.eval('expand(b:terminal_job_id)')
         self.data[filename] = job_id
         self.last_term_job_id = job_id
@@ -270,7 +279,7 @@ class MultiTerm(object):
             self.name_index += 1
 
     @neovim.autocmd('BufWinEnter', eval='expand("%:p")', sync=True,
-                    pattern='*fish*')
+                    pattern='*sh*')
     def on_buffer_win_enter(self, filename):
         try:
             job_id = self.nvim.eval('expand(b:terminal_job_id)')
@@ -280,7 +289,7 @@ class MultiTerm(object):
             pass
 
     @neovim.autocmd('BufEnter', eval='expand("%:p")', sync=True,
-                    pattern='*fish*')
+                    pattern='*sh*')
     def on_buffer_enter(self, filename):
         if psutil is None:
             return
