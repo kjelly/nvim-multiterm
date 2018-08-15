@@ -279,7 +279,7 @@ class MultiTerm(object):
             self.nvim.command("keepalt file %s,%s" % (filename, name))
             self.name_index += 1
 
-    @neovim.autocmd('BufWinEnter', eval='expand("%:p")', sync=True,
+    @neovim.autocmd('BufWinEnter', eval='expand("%:p")', sync=False,
                     pattern='*sh*')
     def on_buffer_win_enter(self, filename):
         try:
@@ -289,7 +289,7 @@ class MultiTerm(object):
         except:
             pass
 
-    @neovim.autocmd('BufEnter', eval='expand("%:p")', sync=True,
+    @neovim.autocmd('BufEnter', eval='expand("%:p")', sync=False,
                     pattern='*sh*')
     def on_buffer_enter(self, filename):
         if psutil is None:
