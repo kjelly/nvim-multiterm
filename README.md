@@ -21,6 +21,29 @@ It's needed that run `UpdateRemotePlugins` again.
 
 ## Use Case
 
+Sample config:
+
+```vim
+let mapleader = ","
+let maplocalleader = "_"
+silent! call plug#begin('~/.config/nvim/plugged')
+Plug 'kjelly/nvim-multiterm', { 'do': ':UpdateRemotePlugins'}
+call plug#end()
+
+nnoremap <leader>lg :C w 'https://www.google.com/search?q=<c-r>=&filetype<cr> '<left>
+nnoremap <leader>lh :C k how2, how2 -l <c-r>=&filetype<cr><space>
+
+```
+
+Step:
+
+```
+:terminal
+:C n how2
+,lh
+```
+
+
 Search in the google in the vim terminal.
 ![w3m](https://raw.githubusercontent.com/kjelly/nvim-multiterm/master/docs/w3m.gif)
 
