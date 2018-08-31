@@ -35,6 +35,8 @@ nnoremap <leader>lh :C k how2, how2 -l <c-r>=&filetype<cr><space>
 
 ```
 
+You also need w3m, [psutils](https://pypi.org/project/psutil/), [how2](https://www.npmjs.com/package/how2)
+
 Step:
 
 ```
