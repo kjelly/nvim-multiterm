@@ -18,8 +18,8 @@ class Result(enum.Enum):
 
 
 def is_shell(name):
-    for i in ['fish', 'bash', 'csh', 'zsh', 'sh']:
-        if ':' + i in name:
+    for i in ['fish', 'bash', 'csh', 'zsh']:
+        if i in name:
             return True
     return False
 
