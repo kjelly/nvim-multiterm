@@ -182,7 +182,7 @@ class MultiTerm(object):
             return
         file_name = inv_data_map[job_id]
         self.nvim.command("buffer %s" % file_name)
-        pid = file_name.split('/')[-1].split(':')[0]
+        pid = file_name.split(':')[1].split('/')[-1]
         p = psutil.Process(pid=int(pid, 10))
         childrens = p.children()
         for i in childrens:
