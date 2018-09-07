@@ -177,8 +177,13 @@ class MultiTerm(object):
         inv_data_map = {v: k for k, v in self.data.items()}
         job_id = inv_name_map.get(name, None)
         if job_id is None:
-            self.echo("Terminal, %s, not found."
-                      " Please create one terminal with the name." % name)
+            self.nvim.command("terminal")
+            self.nvim.command("C n %s" % name)
+            inv_name_map = {v: k for k, v in self.name_map.items()}
+            inv_data_map = {v: k for k, v in self.data.items()}
+            job_id = inv_name_map.get(name, None)
+        if job_id is None:
+            self.echo("terminal not found")
             return
         file_name = inv_data_map[job_id]
         self.nvim.command("buffer %s" % file_name)
