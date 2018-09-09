@@ -99,10 +99,6 @@ Search in the stackoverflow in the vim terminal.
 
   `C n w3m`
 
-- Name the terminal with job id 5 to w3m:
-
-  `C n w3m 5`
-
 - Run the command, 'ls', in the terminal with the name w3m:
 
   `C w3m, ls`
@@ -112,3 +108,8 @@ Search in the stackoverflow in the vim terminal.
   Note: The feature require w3m program and psutil python package
 
   `C w google.com`
+
+- Run the command, 'ls', in the terminal with the name w3m:
+  It will kill any process before running the new command.
+
+  `C k w3m, ls -al`
