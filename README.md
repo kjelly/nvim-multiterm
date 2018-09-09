@@ -55,60 +55,60 @@ Search in the stackoverflow in the vim terminal.
 
 ## Usage
 
-Run `ls -al` in the last terminal:
+- Run `ls -al` in the last terminal:
 
-`C ls -al`
+  `C ls -al`
 
-Run `ls -al` in all terminals:
+- Run `ls -al` in all terminals:
 
-`C a ls -al`
+  `C a ls -al`
 
-Show all the job id of terminal:
+- Show all the job id of terminal:
 
-`C l`
+  `C l`
 
-Run `ls -al` in these terminal whose job id is 1 or 3:
+- Run `ls -al` in these terminal whose job id is 1 or 3:
 
-`C 1,3 ls -al`
+  `C 1,3 ls -al`
 
-Store command `ls` in command map 1:
+- Store command `ls` in command map 1:
 
-`C s1 ls`
+  `C s1 ls`
 
-Run command which is stored in command map 1:
+- Run command which is stored in command map 1:
 
-`C r1`
+  `C r1`
 
-Run the last command:
+- Run the last command:
 
-`C !`
+  `C !`
 
-Run the command with current line:
+- Run the command with current line:
 
-`C !l`
+  `C !l`
 
-Run the command with current word:
+- Run the command with current word:
 
-`C !w`
+  `C !w`
 
-Run the command stored in vim register:
+- Run the command stored in vim register:
 
-`C @a @b`
+  `C @a @b`
 
-Name the current terminal to w3m:
+- Name the current terminal to w3m:
 
-`C n w3m`
+  `C n w3m`
 
-Name the terminal with job id 5 to w3m:
+- Name the terminal with job id 5 to w3m:
 
-`C n w3m 5`
+  `C n w3m 5`
 
-Run the command, 'ls', in the terminal with the name w3m:
+- Run the command, 'ls', in the terminal with the name w3m:
 
-`C w3m, ls`
+  `C w3m, ls`
 
-Use w3m to open google in the terminal whose name is w3m:
+- Use w3m to open google in the terminal whose name is w3m:
 
-Note: The feature require w3m program and psutil python package
+  Note: The feature require w3m program and psutil python package
 
-`C w google.com`
+  `C w google.com`
