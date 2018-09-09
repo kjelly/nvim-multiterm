@@ -1,6 +1,7 @@
 import re
 import neovim
 import enum
+import json
 try:
     import psutil
 except ImportError:
@@ -30,7 +31,6 @@ class MultiTerm(object):
     def __init__(self, nvim):
         self.nvim = nvim
         self.data = {}
-        self.command_map = {}
         self.name_map = {}
         self.last_term_job_id = None
         self.last_command = ''
@@ -40,6 +40,16 @@ class MultiTerm(object):
         self.browser = self.nvim.eval("expand('$BROWSER')")
         if self.browser == '$BROWSER':
             self.browser = 'w3m'
+
+    def get_command_map(self):
+        try:
+            command_map_history = self.nvim.eval('g:MultiTerm_Map')
+            command_map = json.loads(command_map_history)
+        except Exception as e:
+            self.echo(e)
+            command_map = {}
+        return command_map
+
 
     def write_text(self, job_id, data):
         self.nvim.call('jobsend', int(job_id), data)
@@ -82,7 +92,9 @@ class MultiTerm(object):
         '''
         if len(arg0) == 2 and arg0[0] == 's' and isNumber(arg0[1]):
             cmd = ' '.join(args[1:]) + '\n'
-            self.command_map[arg0[1]] = cmd
+            command_map = self.get_command_map()
+            command_map[arg0[1]] = cmd
+            self.nvim.command("let g:MultiTerm_Map='%s'" % json.dumps(command_map))
             return Result.HANDLED
         return Result.UNHANDLED
 
@@ -90,15 +102,16 @@ class MultiTerm(object):
         '''
         Run the command stored in command_map.
         '''
+        command_map = self.get_command_map()
         if arg0[0] == 'r' and len(arg0) == 1:
             self.echo(arg0)
-            cmd = self.command_map.get(arg0[1], '')
+            cmd = command_map.get(arg0[1], '')
             self.run(self.last_term_job_id, cmd)
             return Result.HANDLED
         elif arg0[0] == 'r' and len(arg0) == 2 and isNumber(arg0[1]):
             # C g1 : run command 1 stored in command map.
             self.echo(arg0)
-            cmd = self.command_map.get(arg0[1], '')
+            cmd = command_map.get(arg0[1], '')
             self.run(self.last_term_job_id, cmd)
             return Result.HANDLED
         return Result.UNHANDLED
