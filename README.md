@@ -110,6 +110,7 @@ Search in the stackoverflow in the vim terminal.
   `C w google.com`
 
 - Run the command, 'ls', in the terminal with the name w3m:
+
   It will kill any process before running the new command.
 
   `C k w3m, ls -al`
