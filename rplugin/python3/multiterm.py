@@ -275,11 +275,23 @@ class MultiTerm(object):
     def on_termopen(self, filename):
         if not is_shell(filename):
             return
-        filename = filename.split('#')[0].strip()
+        lst = filename.split('#')
+        filename = lst[0]
         job_id = self.nvim.eval('expand(b:terminal_job_id)')
         self.data[filename] = job_id
         self.last_term_job_id = job_id
-        if self.name_index < 10:
+        if len(lst) > 1:
+            terminal_name = lst[-1]
+            self.name_map[job_id] = terminal_name
+            try:
+                index = self.name_list.index(terminal_name)
+                del self.name_list[index]
+                if index < self.name_index:
+                    self.name_index -= 1
+            except ValueError:
+                pass
+            return
+        if self.name_index < len(self.name_list):
             name = self.name_list[self.name_index]
             self.name_map[job_id] = name
             self.nvim.command("keepalt file %s \#%s" % (filename, name))
