@@ -110,10 +110,10 @@ class MultiTerm(object):
         if arg0 in ['n', 'N'] and len(args) > 1:
             if len(args) == 2:
                 try:
-                    filename = self.nvim.eval("expand('%:p')").split(',')[0]
+                    filename = self.nvim.eval("expand('%:p')").split('#')[0].strip()
                     job_id = self.nvim.eval('expand(b:terminal_job_id)')
                     self.name_map[job_id] = args[1]
-                    self.nvim.command("keepalt file %s,%s" % (filename, args[1]))
+                    self.nvim.command("keepalt file %s \#%s" % (filename, args[1]))
                 except:
                     self.name_map[self.last_term_job_id] = args[1]
                 return Result.HANDLED
@@ -275,13 +275,14 @@ class MultiTerm(object):
     def on_termopen(self, filename):
         if not is_shell(filename):
             return
+        filename = filename.split('#')[0].strip()
         job_id = self.nvim.eval('expand(b:terminal_job_id)')
         self.data[filename] = job_id
         self.last_term_job_id = job_id
         if self.name_index < 10:
             name = self.name_list[self.name_index]
             self.name_map[job_id] = name
-            self.nvim.command("keepalt file %s,%s" % (filename, name))
+            self.nvim.command("keepalt file %s \#%s" % (filename, name))
             self.name_index += 1
 
     @neovim.autocmd('BufWinEnter', eval='expand("%:p")', sync=False,
