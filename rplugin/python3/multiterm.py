@@ -75,6 +75,15 @@ class MultiTerm(object):
             elif val == '!w':
                 self.nvim.command('normal! viw"*y')
                 args[i] = self.nvim.eval('@*')
+            elif val == '!!':
+                shell = self.nvim.eval('&shell')
+                if 'fish' in shell:
+                    args[i] = 'eval $history[1]'
+                elif 'zsh' in shell:
+                    args[i] = '!!\n'
+                else:
+                    args[i] = '!!'
+
             elif len(val) == 2 and val[0] == '@':
                 args[i] = self.nvim.eval('@' + val[1])
 
