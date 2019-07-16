@@ -1,7 +1,10 @@
 import re
-import neovim
+import vim
 import enum
 import json
+import vim
+import shlex
+
 try:
     import psutil
 except ImportError:
@@ -25,11 +28,10 @@ def is_shell(name):
     return False
 
 
-@neovim.plugin
 class MultiTerm(object):
 
-    def __init__(self, nvim):
-        self.nvim = nvim
+    def __init__(self):
+        self.nvim = vim
         self.data = {}
         self.name_map = {}
         self.last_term_job_id = None
@@ -239,8 +241,8 @@ class MultiTerm(object):
     def subcommand_empty(self, arg0, args, range):
         return Result.UNHANDLED
 
-    @neovim.command("C", range='', nargs='*', sync=True)
     def command(self, args, range):
+        args = shlex.split(args)
         if len(args) < 1:
             return
 
@@ -292,9 +294,8 @@ class MultiTerm(object):
             cmd = ' '.join(args[:]) + '\n'
             self.run(self.last_term_job_id, cmd)
 
-    @neovim.autocmd('TermOpen', eval='expand("<afile>")', sync=True,
-                    pattern='*sh*')
-    def on_termopen(self, filename):
+    def on_termopen(self):
+        filename = self.nvim.eval('expand("<afile>")')
         if not is_shell(filename):
             return
         lst = filename.split('#')
@@ -319,9 +320,8 @@ class MultiTerm(object):
             self.nvim.command("keepalt file %s \#%s" % (filename, name))
             self.name_index += 1
 
-    @neovim.autocmd('BufWinEnter', eval='expand("%:p")', sync=False,
-                    pattern='*sh*')
-    def on_buffer_win_enter(self, filename):
+    def on_buffer_win_enter(self):
+        filename = self.nvim.eval('expand("%:p")')
         try:
             job_id = self.nvim.eval('expand(b:terminal_job_id)')
             if self.name_map.get(job_id, '') != 'w3m':
@@ -329,9 +329,8 @@ class MultiTerm(object):
         except:
             pass
 
-    @neovim.autocmd('BufEnter', eval='expand("%:p")', sync=False,
-                    pattern='*sh*')
-    def on_buffer_enter(self, filename):
+    def on_buffer_enter(self):
+        filename = self.nvim.eval('expand("%:p")')
         if psutil is None:
             return
         try:
@@ -343,3 +342,7 @@ class MultiTerm(object):
                 self.nvim.command("normal! i")
         except:
             pass
+
+
+if 'multiterm' not in globals():
+    multiterm = MultiTerm()
